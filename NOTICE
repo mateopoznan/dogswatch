@@ -1,0 +1,12 @@
+Pies Watch
+Copyright (c) 2026 mateopoznan, MIT License (see LICENSE).
+
+This project downloads, while building the Docker image, the YAMNet audio
+classification model published by Google:
+  https://storage.googleapis.com/mediapipe-models/audio_classifier/yamnet/float32/1/yamnet.tflite
+YAMNet is licensed under the Apache License, Version 2.0:
+  https://www.apache.org/licenses/LICENSE-2.0
+The model file is not included in this repository.
+
+Runtime dependencies keep their own licences: Flask (BSD-3-Clause),
+LiteRT / ai-edge-litert (Apache 2.0), FFmpeg (LGPL/GPL, installed from Debian).

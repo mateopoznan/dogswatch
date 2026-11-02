@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ T.login_title }} · Pies Watch{% endblock %}
+{% block content %}
+<form class="card login-box" method="post" action="/login">
+<h1>{{ T.login_title }}</h1>
+<input type="hidden" name="next" value="{{ next }}">
+<label for="user">{{ T.login_user }}</label><input id="user" name="user" autocomplete="username" required autofocus>
+<label for="password">{{ T.login_password }}</label><input id="password" name="password" type="password" autocomplete="current-password" required>
+<button class="btn" type="submit">{{ T.login_button }}</button>
+{% if error %}<p class="login-error" role="alert">{{ error }}</p>{% endif %}
+</form>
+{% endblock %}

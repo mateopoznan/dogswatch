@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}Pies Watch{% endblock %}</title>
+<link rel="stylesheet" href="/static/app.css?v={{ version }}">
+</head>
+<body><main class="wrap {% block main_class %}{% endblock %}">
+<header><div class="brand"><div class="logo">🐕</div><div><strong style="font-size:21px">Pies Watch</strong><div class="sub">{{ T.tagline }}</div></div></div>
+<div class="header-right">{% block header_extra %}{% endblock %}
+<nav class="topnav">{% if not auth_enabled or logged_in %}<a href="/" class="{% block nav_panel %}{% endblock %}">{{ T.nav_panel }}</a><a href="/settings" class="{% block nav_settings %}{% endblock %}">{{ T.nav_settings }}</a>{% endif %}{% if logged_in %}<button type="button" id="logoutButton">{{ T.nav_logout }}</button>{% endif %}
+<span class="lang-switch">{% for code in ["pl", "en"] %}<a href="/lang/{{ code }}?next={{ request.path }}" class="{{ 'active' if code == lang else '' }}" hreflang="{{ code }}">{{ code|upper }}</a>{% endfor %}</span></nav>
+</div></header>
+{% block content %}{% endblock %}
+</main>
+<footer class="site-footer">{{ T.footer.format(version=version) }} <a href="{{ author_url }}" target="_blank" rel="noopener">@mateopoznan</a></footer>
+<script>
+const T={{ T|tojson }};
+function api(url,options={}){options.headers=Object.assign({'X-Requested-With':'PiesWatch'},options.headers||{});return fetch(url,options)}
+const logoutButton=document.getElementById('logoutButton');if(logoutButton)logoutButton.addEventListener('click',async()=>{await api('/logout',{method:'POST'});location.href='/login'});
+</script>
+{% block scripts %}{% endblock %}
+</body></html>

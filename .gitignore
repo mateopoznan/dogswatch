@@ -1,0 +1,8 @@
+.env
+data/
+__pycache__/
+*.pyc
+*.tflite
+*.mp3
+*.wav
+.pending_*

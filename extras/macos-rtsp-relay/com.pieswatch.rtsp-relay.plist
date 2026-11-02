@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Replace the CHANGE_ME values, copy to ~/Library/LaunchAgents/ and run:
+     launchctl load ~/Library/LaunchAgents/com.pieswatch.rtsp-relay.plist -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.pieswatch.rtsp-relay</string>
+  <key>ProgramArguments</key>
+  <array><string>/usr/bin/ruby</string><string>CHANGE_ME/pies-watch/extras/macos-rtsp-relay/rtsp-relay.rb</string></array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>RELAY_BIND</key><string>CHANGE_ME_MAC_LAN_IP</string>
+    <key>RELAY_PORT</key><string>15554</string>
+    <key>RELAY_UPSTREAM</key><string>CHANGE_ME_CAMERA_IP</string>
+    <key>RELAY_UPSTREAM_PORT</key><string>554</string>
+  </dict>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>StandardOutPath</key><string>/tmp/pies-watch-relay.log</string>
+  <key>StandardErrorPath</key><string>/tmp/pies-watch-relay.log</string>
+</dict>
+</plist>

@@ -1,0 +1,14 @@
+services:
+  pies-watch:
+    build: .
+    image: pies-watch:local
+    container_name: ${CONTAINER_NAME:-pies-watch}
+    restart: unless-stopped
+    ports:
+      - "${PORT:-1717}:1717"
+    env_file:
+      - .env
+    environment:
+      - PORT=${PORT:-1717}
+    volumes:
+      - ./data:/app/data

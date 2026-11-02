@@ -1,0 +1,6 @@
+# Microphone on a Linux host: docker compose -f docker-compose.yml -f docker-compose.mic.yml up -d
+# (the installer adds this file through COMPOSE_FILE in .env).
+services:
+  pies-watch:
+    devices:
+      - /dev/snd:/dev/snd

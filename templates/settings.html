@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ T.settings_title }} · Pies Watch{% endblock %}
+{% block main_class %}narrow{% endblock %}
+{% block nav_settings %}active{% endblock %}
+{% block content %}
+<form id="settingsForm" novalidate>
+<section class="card form-card"><h2>{{ T.settings_general }}</h2>
+<div class="field"><label for="language">{{ T.settings_language }}</label><select id="language" name="language"><option value="pl">Polski</option><option value="en">English</option></select></div>
+<div class="field"><label for="place_name">{{ T.settings_place }}</label><input type="text" id="place_name" name="place_name" maxlength="80"><p class="help">{{ T.settings_place_hint }}</p></div>
+<div class="field"><label for="timezone">{{ T.settings_timezone }}</label><input type="text" id="timezone" name="timezone" list="timezones"><p class="help">{{ T.settings_timezone_hint }}</p></div>
+<datalist id="timezones"><option value="Europe/Warsaw"><option value="Europe/London"><option value="Europe/Berlin"><option value="Europe/Paris"><option value="America/New_York"><option value="America/Chicago"><option value="America/Los_Angeles"><option value="UTC"></datalist>
+<div class="field readonly"><label>{{ T.settings_port_info }}</label><span class="value" id="portInfo">—</span><p class="help">{{ T.settings_port_info_hint }}</p></div>
+</section>
+<section class="card form-card"><h2>{{ T.settings_source }}</h2>
+<div class="field"><label for="source_type">{{ T.settings_source_type }}</label><select id="source_type" name="source_type"><option value="none">{{ T.source_none }}</option><option value="dahua">{{ T.source_dahua }}</option><option value="url">{{ T.source_url }}</option><option value="microphone">{{ T.source_microphone }}</option></select></div>
+<div data-source="url"><div class="field"><label for="source_url">{{ T.settings_url }}</label><input type="text" id="source_url" name="source_url" spellcheck="false" autocomplete="off"><p class="help">{{ T.settings_url_hint }}</p></div></div>
+<div data-source="dahua"><div class="field"><label for="dahua_host">{{ T.settings_host }}</label><input type="text" id="dahua_host" name="dahua_host" spellcheck="false" autocomplete="off" placeholder="192.168.1.108"></div>
+<div class="field"><label for="dahua_port">{{ T.settings_port }}</label><input type="number" id="dahua_port" name="dahua_port" min="1" max="65535"></div>
+<div class="field"><label for="dahua_channel">{{ T.settings_channel }}</label><input type="number" id="dahua_channel" name="dahua_channel" min="0" max="64"></div>
+<div class="field"><label for="dahua_subtype">{{ T.settings_subtype }}</label><select id="dahua_subtype" name="dahua_subtype"><option value="0">{{ T.subtype_main }}</option><option value="1">{{ T.subtype_sub }}</option></select></div></div>
+<div data-source="dahua url"><div class="field"><label for="source_user">{{ T.settings_user }}</label><input type="text" id="source_user" name="source_user" autocomplete="off" spellcheck="false"></div>
+<div class="field"><label for="source_password">{{ T.settings_password }}</label><input type="password" id="source_password" name="source_password" autocomplete="new-password"><p class="help" id="sourcePasswordHelp"></p></div></div>
+<div data-source="microphone"><p class="note">{{ T.settings_mic_note }}</p><div class="field"><label for="alsa_device">{{ T.settings_device }}</label><input type="text" id="alsa_device" name="alsa_device" spellcheck="false"><p class="help">{{ T.settings_device_hint }}</p></div></div>
+</section>
+<section class="card form-card"><h2>{{ T.settings_detection }}</h2>
+<div class="field"><label for="bark_threshold">{{ T.settings_bark_threshold }}</label><input type="number" id="bark_threshold" name="bark_threshold" step="0.01" min="0.05" max="0.95"><p class="help">{{ T.settings_bark_threshold_hint }}</p></div>
+<div class="field"><label for="bark_high_threshold">{{ T.settings_high_threshold }}</label><input type="number" id="bark_high_threshold" name="bark_high_threshold" step="0.01" min="0.05" max="0.99"><p class="help">{{ T.settings_high_threshold_hint }}</p></div>
+<div class="field"><label for="audio_threshold">{{ T.settings_audio_threshold }}</label><input type="number" id="audio_threshold" name="audio_threshold" step="0.001" min="0.0005" max="0.5"><p class="help">{{ T.settings_audio_threshold_hint }}</p></div>
+<div class="field"><label for="min_event_seconds">{{ T.settings_min_event }}</label><input type="number" id="min_event_seconds" name="min_event_seconds" step="0.1" min="0.1" max="2"></div>
+<div class="field"><label for="pre_roll_seconds">{{ T.settings_pre_roll }}</label><input type="number" id="pre_roll_seconds" name="pre_roll_seconds" step="0.5" min="0" max="10"></div>
+<div class="field"><label for="merge_gap_seconds">{{ T.settings_merge_gap }}</label><input type="number" id="merge_gap_seconds" name="merge_gap_seconds" step="1" min="1" max="120"><p class="help">{{ T.settings_merge_gap_hint }}</p></div>
+<div class="field"><label for="bark_padding_seconds">{{ T.settings_padding }}</label><input type="number" id="bark_padding_seconds" name="bark_padding_seconds" step="0.5" min="0" max="15"></div>
+<div class="field"><label for="min_event_block_seconds">{{ T.settings_min_block }}</label><input type="number" id="min_event_block_seconds" name="min_event_block_seconds" step="0.5" min="0" max="60"></div>
+<div class="field"><label for="max_candidate_seconds">{{ T.settings_max_candidate }}</label><input type="number" id="max_candidate_seconds" name="max_candidate_seconds" step="60" min="60" max="7200"></div>
+</section>
+<section class="card form-card"><h2>{{ T.settings_storage }}</h2>
+<div class="field"><label for="retention_days">{{ T.settings_retention }}</label><input type="number" id="retention_days" name="retention_days" step="1" min="1" max="3650"><p class="help">{{ T.settings_retention_hint }}</p></div>
+</section>
+<section class="card form-card"><h2>{{ T.settings_access }}</h2>
+<div class="field check"><label for="auth_enabled">{{ T.settings_auth }}</label><input type="checkbox" id="auth_enabled" name="auth_enabled"><p class="help">{{ T.settings_auth_hint }}</p></div>
+<div data-auth><div class="field"><label for="auth_user">{{ T.settings_auth_user }}</label><input type="text" id="auth_user" name="auth_user" autocomplete="username"></div>
+<div class="field"><label for="auth_password">{{ T.settings_auth_password }}</label><input type="password" id="auth_password" name="auth_password" autocomplete="new-password" minlength="8"><p class="help">{{ T.settings_auth_password_hint }}</p></div></div>
+</section>
+<div class="form-actions"><button class="btn" type="submit">{{ T.settings_save }}</button><span class="form-status" id="formStatus" role="status"></span></div>
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+const form=document.getElementById('settingsForm'),statusLine=document.getElementById('formStatus');
+const textFields=['place_name','timezone','source_url','source_user','dahua_host','alsa_device','auth_user'];
+const numberFields=['dahua_port','dahua_channel','bark_threshold','bark_high_threshold','audio_threshold','min_event_seconds','pre_roll_seconds','merge_gap_seconds','bark_padding_seconds','min_event_block_seconds','max_candidate_seconds','retention_days'];
+const selectFields=['language','source_type','dahua_subtype'];let loadedLanguage=null;
+function showSections(){const kind=form.source_type.value;for(const block of form.querySelectorAll('[data-source]'))block.hidden=!block.dataset.source.split(' ').includes(kind);form.querySelector('[data-auth]').hidden=!form.auth_enabled.checked}
+function fill(s){for(const name of [...textFields,...numberFields,...selectFields])if(s[name]!==undefined&&s[name]!==null)form[name].value=s[name];loadedLanguage=s.language;form.auth_enabled.checked=!!s.auth_enabled;form.source_password.value='';form.auth_password.value='';document.getElementById('sourcePasswordHelp').textContent=s.source_password_set?T.settings_password_keep:T.settings_password_empty;document.getElementById('portInfo').textContent=s.port;showSections()}
+form.source_type.addEventListener('change',showSections);form.auth_enabled.addEventListener('change',showSections);
+async function load(){const response=await fetch('/api/settings',{cache:'no-store'});if(response.status===401){location.href='/login?next=/settings';return}fill(await response.json())}
+form.addEventListener('submit',async e=>{e.preventDefault();const body={auth_enabled:form.auth_enabled.checked};for(const name of [...textFields,...selectFields])body[name]=form[name].value;for(const name of numberFields)body[name]=form[name].value;if(form.source_password.value)body.source_password=form.source_password.value;if(form.auth_password.value)body.auth_password=form.auth_password.value;const languageChanged=body.language!==loadedLanguage;if(!languageChanged)delete body.language;statusLine.className='form-status';statusLine.textContent='…';try{const response=await api('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const result=await response.json();if(!response.ok)throw new Error(result.error||T.save_failed);if(languageChanged){location.reload();return}fill(result);statusLine.className='form-status ok';statusLine.textContent=T.settings_saved}catch(err){statusLine.className='form-status bad';statusLine.textContent=T.settings_error.replace('{error}',err.message)}});
+load();
+</script>
+{% endblock %}
