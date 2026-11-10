@@ -547,6 +547,34 @@ class SourceChanged(Exception):
     pass
 
 
+class StreamStalled(RuntimeError):
+    pass
+
+
+STALL_SECONDS = 20
+
+
+def watch_for_stall(proc, last_audio, version):
+    """Kill FFmpeg when the source stops sending audio without closing the connection.
+
+    A stalled RTSP stream keeps the socket open, so the read would otherwise wait forever while
+    the panel still shows a connection. Returns the thread and an event set when it intervened.
+    """
+    stalled = threading.Event()
+
+    def watch():
+        while proc.poll() is None:
+            time.sleep(1)
+            if version != source_version or time.monotonic() - last_audio[0] > STALL_SECONDS:
+                stalled.set()
+                proc.kill()
+                return
+
+    thread = threading.Thread(target=watch, daemon=True)
+    thread.start()
+    return thread, stalled
+
+
 def detector():
     active = None
     clip = None
@@ -592,6 +620,8 @@ def detector():
         proc = None
         try:
             proc = run_ffmpeg(source + ["-vn", "-ac", "1", "-ar", str(sample_rate), "-f", "s16le", "-"])
+            last_audio = [time.monotonic()]
+            _, stalled = watch_for_stall(proc, last_audio, version)
             with lock:
                 state.update(connected=True, last_error="")
             while True:
@@ -599,7 +629,12 @@ def detector():
                     raise SourceChanged()
                 chunk = read_exact(proc.stdout, frame_bytes)
                 if len(chunk) < frame_bytes:
+                    if version != source_version:
+                        raise SourceChanged()
+                    if stalled.is_set():
+                        raise StreamStalled(t("err_stream_stalled", seconds=STALL_SECONDS))
                     raise RuntimeError(t("err_stream_ended"))
+                last_audio[0] = time.monotonic()
                 vals = memoryview(chunk).cast("h")
                 rms = math.sqrt(sum(v * v for v in vals) / len(vals)) / 32768
                 now = datetime.now(local_tz)
@@ -649,8 +684,12 @@ def detector():
                     detail = proc.stderr.read(4096).decode("utf-8", "replace").strip()
                 except Exception:
                     pass
+            message = str(exc) if isinstance(exc, StreamStalled) else hide_secrets(detail or str(exc))[:240]
+            if not changed:
+                print(f"{datetime.now(local_tz).isoformat(timespec='seconds')} {message}", flush=True)
             with lock:
-                state.update(connected=False, last_error="" if changed else hide_secrets(detail or str(exc))[:240])
+                state.update(connected=False, last_error="" if changed else message)
+                state["reconnects"] = state.get("reconnects", 0) + (0 if changed else 1)
             if active is not None:
                 finish_candidate()
             if not changed:
